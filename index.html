@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="theme-color" content="#1e2a78" />
+<title>WEC Fall 2026 — Waterloo Engineering Competition</title>
+<meta name="description" content="Waterloo Engineering Competition Fall 2026. Build, Compete, Innovate. November 2026, in-person at the University of Waterloo." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ---------- Design tokens ---------- */
+:root{
+  --bg-top:#1e2a78;        /* deep royal blue */
+  --bg-mid:#2f57b8;        /* mid royal */
+  --bg-bot:#4a9fe8;        /* sky blue */
+  --purple-deep:#2a1f6e;
+  --purple:#5a3fc0;
+  --lilac:#c9b6ff;
+  --periwinkle:#dfe1ff;
+  --gold:#fbcd4a;
+  --gold-soft:#ffe28a;
+  --ink:#1a154a;
+  --white:#ffffff;
+  --shadow:0 20px 40px rgba(8,10,40,.35);
+  --radius:999px;
+  --content:1180px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Baloo 2','Fredoka','Quicksand',system-ui,sans-serif;
+  font-weight:600;
+  color:var(--white);
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(255,255,255,.08), transparent 60%),
+    radial-gradient(900px 500px at 10% 110%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg, var(--bg-top) 0%, #2741a2 45%, var(--bg-bot) 100%);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.45;
+}
+
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+img,svg{display:block;max-width:100%}
+
+/* Visible keyboard focus everywhere */
+:focus-visible{
+  outline:3px solid var(--gold);
+  outline-offset:3px;
+  border-radius:6px;
+}
+
+/* ---------- Decorative background (sparkles, stars, trails) ---------- */
+.bg-deco{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.bg-deco svg{position:absolute}
+
+.sparkle{
+  position:absolute;
+  color:#fff;
+  opacity:.85;
+  animation: twinkle 3.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,.6));
+}
+@keyframes twinkle{
+  0%,100%{transform:scale(1);opacity:.9}
+  50%{transform:scale(.6);opacity:.35}
+}
+
+.trail{
+  position:absolute;
+  opacity:.55;
+  color:#fff;
+}
+
+/* Balloons + moon + mascot floating */
+.float-deco{
+  position:absolute;
+  pointer-events:none;
+  animation: bob 7s ease-in-out infinite;
+}
+@keyframes bob{
+  0%,100%{transform:translateY(0) rotate(-2deg)}
+  50%{transform:translateY(-18px) rotate(2deg)}
+}
+.float-slow{ animation-duration:9s }
+.float-fast{ animation-duration:5s }
+
+/* ---------- Nav (pill) ---------- */
+.nav-wrap{
+  position:sticky;
+  top:18px;
+  z-index:50;
+  display:flex;
+  justify-content:center;
+  padding:0 18px;
+}
+.nav{
+  width:min(var(--content), 100%);
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:10px 14px;
+  background:linear-gradient(180deg,#e7e9ff 0%, #cfd2ff 100%);
+  border:2px solid #6a55c6;
+  border-radius:var(--radius);
+  box-shadow: 0 10px 30px rgba(10,14,60,.35), inset 0 0 0 2px rgba(255,255,255,.4);
+  color:#2a1f6e;
+}
+.nav .logo{
+  display:flex;align-items:center;gap:10px;
+  padding:6px 14px;
+  font-weight:800;
+  font-size:20px;
+  letter-spacing:.5px;
+  color:#2a1f6e;
+}
+.nav .logo .badge{
+  width:36px;height:36px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #7a63d8, #3b2899 70%);
+  border:2px solid #fff;
+  display:grid;place-items:center;color:#fff;font-size:18px;
+  box-shadow:0 4px 10px rgba(0,0,0,.25);
+}
+.nav ul{
+  list-style:none;
+  display:flex;
+  gap:6px;
+  margin:0 auto;
+  padding:0;
+}
+.nav ul a{
+  display:inline-block;
+  padding:8px 16px;
+  border-radius:var(--radius);
+  font-weight:700;
+  color:#2a1f6e;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.nav ul a:hover{ background:rgba(106,85,198,.18); transform:translateY(-1px) }
+.nav .right{ display:flex; align-items:center; gap:8px; }
+.btn-dashboard{
+  background:linear-gradient(180deg,#6a55c6,#3b2899);
+  color:#fff;
+  border:none;
+  border-radius:var(--radius);
+  padding:10px 18px;
+  font-weight:700;
+  box-shadow:0 6px 14px rgba(59,40,153,.4);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn-dashboard:hover{ transform:translateY(-1px); box-shadow:0 10px 20px rgba(59,40,153,.5) }
+.icon-btn{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(180deg,#6a55c6,#3b2899);
+  color:#fff;display:grid;place-items:center;
+  border:none;
+}
+.season-pill{
+  position:absolute;
+  top:-14px;right:24px;
+  background:linear-gradient(180deg,#3b2899,#1f1457);
+  color:var(--gold);
+  font-size:12px;font-weight:700;
+  padding:6px 12px;border-radius:var(--radius);
+  letter-spacing:.5px;
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+  white-space:nowrap;
+}
+.season-pill .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-right:6px;vertical-align:middle}
+
+/* Mobile menu */
+.nav-toggle{
+  display:none;
+  margin-left:auto;
+  background:transparent;border:none;color:#2a1f6e;
+}
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;
+  z-index:2;
+  max-width:var(--content);
+  margin:0 auto;
+  padding:70px 24px 100px;
+  text-align:center;
+}
+.eyebrow{
+  letter-spacing:.4em;
+  font-size:14px;
+  color:var(--gold);
+  font-weight:700;
+  margin-bottom:14px;
+  text-transform:uppercase;
+}
+.wordmark{
+  position:relative;
+  display:inline-block;
+  font-family:'Baloo 2',sans-serif;
+  font-weight:800;
+  font-size: clamp(110px, 22vw, 240px);
+  line-height:1;
+  letter-spacing:-4px;
+  background: linear-gradient(180deg, #5a3fc0 0%, #c9b6ff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow: 0 12px 28px rgba(0,0,0,.25);
+  margin:0;
+}
+.wordmark::after{
+  /* subtle outer glow */
+  content:"";
+  position:absolute;inset:-10px;
+  background:radial-gradient(60% 60% at 50% 60%, rgba(201,182,255,.25), transparent 70%);
+  z-index:-1;
+}
+.planet{
+  position:absolute;
+  top:-6%;
+  right:-10%;
+  width:clamp(80px,14vw,160px);
+  filter: drop-shadow(0 10px 16px rgba(0,0,0,.35));
+  animation: bob 6s ease-in-out infinite;
+}
+.tagline{
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight:700;
+  margin: 18px 0 8px;
+}
+.date-line{
+  color:var(--gold);
+  font-weight:700;
+  font-size: clamp(16px, 2vw, 22px);
+  margin-bottom:30px;
+}
+
+.cta-row{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  flex-wrap:wrap;
+}
+.cta{
+  background:linear-gradient(180deg,#3a2c7c,#221760);
+  color:#fff;
+  border:2px solid #5a3fc0;
+  border-radius:var(--radius);
+  padding:14px 30px;
+  font-size:18px;
+  font-weight:700;
+  box-shadow:0 14px 24px rgba(20,12,60,.45), inset 0 1px 0 rgba(255,255,255,.15);
+  transition: transform .18s ease, box-shadow .18s ease, background .2s;
+}
+.cta:hover{
+  transform: translateY(-2px);
+  box-shadow:0 18px 30px rgba(20,12,60,.55);
+  background:linear-gradient(180deg,#4733a0,#2a1d76);
+}
+.cta.alt{
+  background:linear-gradient(180deg,#5a3fc0,#3a2790);
+}
+
+/* ---------- Section frame ---------- */
+section.block{
+  position:relative;
+  z-index:2;
+  max-width:var(--content);
+  margin: 40px auto;
+  padding: 24px;
+}
+.block h2{
+  font-size: clamp(30px, 4vw, 48px);
+  margin: 0 0 6px;
+  text-align:center;
+  background:linear-gradient(180deg,#fff, #d9e6ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.block .sub{
+  text-align:center;
+  color:#dfe8ff;
+  margin-bottom: 36px;
+  font-weight:600;
+}
+
+/* ---------- Categories grid ---------- */
+.cards{
+  display:grid;
+  gap:22px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:24px;
+  padding:24px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 20px 36px rgba(8,10,40,.4);
+  border-color: rgba(201,182,255,.55);
+}
+.card .ico{
+  width:54px;height:54px;border-radius:18px;
+  background:linear-gradient(180deg,#7a63d8,#3b2899);
+  display:grid;place-items:center;
+  margin-bottom:14px;
+  font-size:26px;
+  box-shadow:0 8px 16px rgba(0,0,0,.25);
+}
+.card h3{ margin:6px 0 6px; font-size:22px }
+.card p{ margin:0 0 14px; color:#e8edff; font-weight:500 }
+.card .meta{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:var(--radius);
+  background: rgba(251,205,74,.15);
+  color: var(--gold);
+  font-weight:700;
+  font-size:14px;
+  border:1px solid rgba(251,205,74,.35);
+}
+
+/* ---------- Timeline ---------- */
+.timeline{
+  position:relative;
+  margin-top:10px;
+  padding-left: 28px;
+}
+.timeline::before{
+  content:"";
+  position:absolute; left:10px; top:6px; bottom:6px;
+  width:4px; border-radius:4px;
+  background: linear-gradient(180deg, var(--lilac), var(--gold));
+  opacity:.7;
+}
+.t-item{
+  position:relative;
+  margin-bottom:22px;
+  padding: 14px 18px;
+  background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:18px;
+}
+.t-item::before{
+  content:"";
+  position:absolute; left:-24px; top:20px;
+  width:14px; height:14px; border-radius:50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 4px rgba(251,205,74,.25);
+}
+.t-item .when{
+  color: var(--gold);
+  font-weight:700;
+  font-size:14px;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+}
+.t-item h4{ margin:4px 0 4px; font-size:20px }
+.t-item p{ margin:0; color:#e8edff; font-weight:500 }
+
+/* ---------- FAQ ---------- */
+.faq{ max-width: 820px; margin: 0 auto }
+.faq-item{
+  background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:20px;
+  margin-bottom:14px;
+  overflow:hidden;
+  transition: background .2s, border-color .2s;
+}
+.faq-item:hover{ border-color: rgba(201,182,255,.45) }
+.faq-q{
+  width:100%;
+  background:transparent;
+  color:#fff;
+  border:none;
+  text-align:left;
+  padding:18px 22px;
+  font-size:18px;
+  font-weight:700;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+}
+.faq-q .chev{
+  width:28px;height:28px;border-radius:50%;
+  background: linear-gradient(180deg, #7a63d8, #3b2899);
+  display:grid;place-items:center;
+  transition: transform .25s ease;
+  flex-shrink:0;
+}
+.faq-item[aria-expanded="true"] .chev{ transform: rotate(180deg) }
+.faq-a{
+  max-height:0;
+  overflow:hidden;
+  transition: max-height .35s ease;
+  padding:0 22px;
+  color:#e8edff;
+  font-weight:500;
+}
+.faq-item[aria-expanded="true"] .faq-a{
+  padding: 0 22px 18px;
+}
+
+/* ---------- Footer ---------- */
+footer{
+  position:relative;
+  z-index:2;
+  margin-top:80px;
+  padding: 40px 24px 60px;
+  text-align:center;
+  background: linear-gradient(180deg, transparent, rgba(10,18,60,.45));
+}
+footer .row{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:16px;
+  margin-bottom:14px;
+}
+footer a.mail{
+  display:inline-block;
+  background:linear-gradient(180deg,#3a2c7c,#221760);
+  color:#fff;
+  border:2px solid #5a3fc0;
+  padding:10px 22px;
+  border-radius:var(--radius);
+  font-weight:700;
+}
+footer p{ color:#cfd8ff; margin:6px 0 }
+
+/* ---------- Reveal-on-scroll ---------- */
+.reveal{
+  opacity:0;
+  transform: translateY(24px);
+  transition: opacity .7s ease, transform .7s ease;
+  will-change: opacity, transform;
+}
+.reveal.is-visible{ opacity:1; transform: none }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 880px){
+  .nav ul{ display:none }
+  .nav .right .icon-btn{ display:none }
+  .nav-toggle{ display:inline-grid; place-items:center; width:40px; height:40px; border-radius:50%; background:linear-gradient(180deg,#6a55c6,#3b2899); color:#fff }
+  .nav ul.open{
+    display:flex;
+    flex-direction:column;
+    position:absolute;
+    top:74px; left:18px; right:18px;
+    background:#e7e9ff;
+    border:2px solid #6a55c6;
+    border-radius:24px;
+    padding:14px;
+    box-shadow:0 14px 30px rgba(10,14,60,.35);
+  }
+  .nav ul.open a{ text-align:center }
+  .season-pill{ font-size:10px; padding:4px 10px; right:16px }
+  .hero{ padding-top:50px; padding-bottom:60px }
+  .planet{ right:0; top:-4% }
+  .balloon-r, .balloon-l, .moon{ transform: scale(.75) }
+}
+@media (max-width: 560px){
+  .cta-row .cta{ width:100%; max-width:340px }
+  .nav .logo{ font-size:18px; padding:6px 8px }
+  .nav .logo .badge{ width:32px;height:32px }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important }
+  html{ scroll-behavior:auto }
+  .reveal{ opacity:1; transform:none }
+}
+</style>
+</head>
+<body>
+
+<!-- Decorative background: sparkles, stars, shooting trails, balloons, moon, mascot -->
+<div class="bg-deco" aria-hidden="true">
+  <!-- Four-point sparkle stars -->
+  <svg class="sparkle" style="top:8%;left:12%;width:22px;height:22px;animation-delay:.2s" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+  <svg class="sparkle" style="top:18%;left:78%;width:18px;height:18px;animation-delay:1s" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+  <svg class="sparkle" style="top:30%;left:6%;width:14px;height:14px;animation-delay:1.6s" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+  <svg class="sparkle" style="top:42%;left:92%;width:16px;height:16px;animation-delay:.6s" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+  <svg class="sparkle" style="top:64%;left:30%;width:12px;height:12px;animation-delay:2.4s" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+  <svg class="sparkle" style="top:74%;left:88%;width:18px;height:18px;animation-delay:.8s" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+  <svg class="sparkle" style="top:55%;left:60%;width:10px;height:10px;animation-delay:1.2s" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg>
+
+  <!-- Shooting-star trails -->
+  <svg class="trail" style="top:14%;left:62%;width:160px;height:60px" viewBox="0 0 160 60" fill="none">
+    <path d="M2 50 Q 60 0 158 14" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+  </svg>
+  <svg class="trail" style="top:36%;left:18%;width:200px;height:70px" viewBox="0 0 200 70" fill="none">
+    <path d="M2 60 Q 100 0 198 30" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".4"/>
+  </svg>
+
+  <!-- Crescent moon (left mid) -->
+  <div class="float-deco moon float-slow" style="top:38%;left:3%">
+    <svg width="86" height="86" viewBox="0 0 86 86">
+      <defs>
+        <radialGradient id="moonG" cx="35%" cy="35%" r="70%">
+          <stop offset="0%" stop-color="#ffe28a"/>
+          <stop offset="100%" stop-color="#e7a82a"/>
+        </radialGradient>
+      </defs>
+      <path d="M60 12 A36 36 0 1 0 60 74 A28 28 0 1 1 60 12 Z" fill="url(#moonG)" stroke="#a26b00" stroke-width="2"/>
+    </svg>
+  </div>
+
+  <!-- Balloons (top right) -->
+  <div class="float-deco balloon-r" style="top:6%;right:4%">
+    <svg width="80" height="130" viewBox="0 0 80 130">
+      <defs>
+        <radialGradient id="goldB" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#fff1b0"/>
+          <stop offset="100%" stop-color="#e7a82a"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="40" cy="44" rx="32" ry="40" fill="url(#goldB)" stroke="#a26b00" stroke-width="2"/>
+      <path d="M40 84 L36 92 L44 92 Z" fill="#a26b00"/>
+      <path d="M40 92 Q 50 110 36 128" stroke="#cfd8ff" stroke-width="1.4" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- Balloon (mid right) -->
+  <div class="float-deco balloon-r float-fast" style="top:55%;right:6%">
+    <svg width="68" height="110" viewBox="0 0 68 110">
+      <defs>
+        <radialGradient id="purpB" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#c9b6ff"/>
+          <stop offset="100%" stop-color="#5a3fc0"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="34" cy="38" rx="28" ry="34" fill="url(#purpB)" stroke="#2a1f6e" stroke-width="2"/>
+      <path d="M34 72 L30 80 L38 80 Z" fill="#2a1f6e"/>
+      <path d="M34 80 Q 22 96 36 108" stroke="#cfd8ff" stroke-width="1.4" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- Balloon (left, lower) -->
+  <div class="float-deco balloon-l" style="top:72%;left:5%">
+    <svg width="60" height="100" viewBox="0 0 60 100">
+      <defs>
+        <radialGradient id="goldB2" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#fff1b0"/>
+          <stop offset="100%" stop-color="#e7a82a"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="30" cy="34" rx="24" ry="30" fill="url(#goldB2)" stroke="#a26b00" stroke-width="2"/>
+      <path d="M30 64 L26 72 L34 72 Z" fill="#a26b00"/>
+      <path d="M30 72 Q 18 86 30 98" stroke="#cfd8ff" stroke-width="1.4" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- Cartoon robot mascot (lower-left) -->
+  <div class="float-deco mascot float-slow" style="bottom:24px;left:24px">
+    <svg width="120" height="140" viewBox="0 0 120 140" aria-label="WEC mascot">
+      <!-- antenna -->
+      <line x1="60" y1="6" x2="60" y2="28" stroke="#cfd8ff" stroke-width="3"/>
+      <circle cx="60" cy="6" r="6" fill="#ff7da7"/>
+      <!-- head -->
+      <rect x="20" y="28" width="80" height="60" rx="18" fill="#e7e9ff" stroke="#3b2899" stroke-width="3"/>
+      <!-- screen face -->
+      <rect x="30" y="40" width="60" height="36" rx="10" fill="#2a1f6e"/>
+      <circle cx="46" cy="58" r="6" fill="#4ad7ff"/>
+      <circle cx="74" cy="58" r="6" fill="#4ad7ff"/>
+      <!-- mouth smile -->
+      <path d="M48 68 Q 60 76 72 68" stroke="#4ad7ff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- body -->
+      <rect x="32" y="92" width="56" height="40" rx="12" fill="#e7e9ff" stroke="#3b2899" stroke-width="3"/>
+      <!-- gear/button -->
+      <circle cx="60" cy="112" r="10" fill="#fbcd4a" stroke="#a26b00" stroke-width="2"/>
+      <path d="M60 104 L60 100 M60 124 L60 120 M52 112 L48 112 M72 112 L68 112" stroke="#a26b00" stroke-width="2"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ---------- NAV ---------- -->
+<div class="nav-wrap">
+  <nav class="nav" aria-label="Primary">
+    <span class="season-pill" aria-hidden="true"><span class="dot"></span>OFFICIAL 2026 SEASON</span>
+
+    <a class="logo" href="#top" aria-label="WEC home">
+      <span class="badge" aria-hidden="true">W</span>
+      <span>WEC</span>
+    </a>
+
+    <ul id="primary-menu">
+      <li><a href="#about">About</a></li>
+      <li><a href="#sponsors">Sponsors</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <div class="right">
+      <a class="btn-dashboard" href="#register">Dashboard</a>
+      <a class="icon-btn" href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+      </a>
+      <a class="icon-btn" href="https://linkedin.com" aria-label="LinkedIn" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h4v4H4zm0 6h4v10H4zm6 0h4v2c.7-1.4 2.3-2.4 4-2.4 3 0 4 2 4 5V20h-4v-5c0-1.5-.5-2.5-2-2.5s-2 1-2 2.5V20h-4z"/></svg>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </nav>
+</div>
+
+<!-- ---------- HERO ---------- -->
+<header class="hero" id="top">
+  <p class="eyebrow reveal">Waterloo · Engineering · Competition</p>
+
+  <div style="position:relative;display:inline-block">
+    <h1 class="wordmark reveal">WEC</h1>
+    <!-- planet + "26" season badge -->
+    <svg class="planet reveal" viewBox="0 0 160 160" aria-hidden="true">
+      <defs>
+        <radialGradient id="pg" cx="35%" cy="35%" r="70%">
+          <stop offset="0%" stop-color="#a7c8ff"/>
+          <stop offset="100%" stop-color="#3b6fd0"/>
+        </radialGradient>
+        <radialGradient id="yg" cx="35%" cy="35%" r="70%">
+          <stop offset="0%" stop-color="#fff1b0"/>
+          <stop offset="100%" stop-color="#e7a82a"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="80" cy="90" rx="74" ry="14" fill="none" stroke="#c9b6ff" stroke-width="3" transform="rotate(-18 80 90)" opacity=".85"/>
+      <circle cx="98" cy="78" r="38" fill="url(#pg)" stroke="#1a2c66" stroke-width="3"/>
+      <ellipse cx="80" cy="90" rx="74" ry="14" fill="none" stroke="#c9b6ff" stroke-width="3" transform="rotate(-18 80 90)" opacity=".55" stroke-dasharray="6 90"/>
+      <!-- "26" badge -->
+      <circle cx="50" cy="58" r="28" fill="url(#yg)" stroke="#a26b00" stroke-width="3"/>
+      <text x="50" y="68" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="28" fill="#a26b00">26</text>
+    </svg>
+  </div>
+
+  <h2 class="tagline reveal">Build, Compete, Innovate</h2>
+  <p class="date-line reveal">November 2026 · In-Person @ University of Waterloo</p>
+
+  <div class="cta-row reveal">
+    <a href="#register" class="cta">Register Now</a>
+    <a href="#categories" class="cta alt">View Categories</a>
+  </div>
+
+  <!-- live countdown -->
+  <p id="countdown" class="reveal" style="margin-top:30px;color:#dfe8ff;font-weight:600" aria-live="polite"></p>
+</header>
+
+<!-- ---------- ABOUT (anchor target) ---------- -->
+<section class="block" id="about">
+  <h2 class="reveal">About WEC</h2>
+  <p class="sub reveal">The largest engineering competition at Canada's #1 engineering school. Two thrilling days. Six categories. One unforgettable weekend of designing, debating, and dreaming up what's next.</p>
+</section>
+
+<!-- ---------- CATEGORIES ---------- -->
+<section class="block" id="categories">
+  <h2 class="reveal">Competition Categories</h2>
+  <p class="sub reveal">Pick your battlefield. Each track is judged independently by industry experts.</p>
+
+  <div class="cards">
+    <article class="card reveal">
+      <div class="ico" aria-hidden="true">🛠️</div>
+      <h3>Junior Design</h3>
+      <p>Hands-on prototyping for 1A &amp; 1B students. Build a working solution to a surprise prompt in 6 hours.</p>
+      <span class="meta">Teams of 4</span>
+    </article>
+
+    <article class="card reveal">
+      <div class="ico" aria-hidden="true">🧠</div>
+      <h3>Senior Design</h3>
+      <p>For upper-year engineers. Tackle an open-ended technical challenge with real-world constraints.</p>
+      <span class="meta">Teams of 4</span>
+    </article>
+
+    <article class="card reveal">
+      <div class="ico" aria-hidden="true">📊</div>
+      <h3>Consulting</h3>
+      <p>Crack a business case for a real company and present your strategy to a panel of executives.</p>
+      <span class="meta">Teams of 3</span>
+    </article>
+
+    <article class="card reveal">
+      <div class="ico" aria-hidden="true">💻</div>
+      <h3>Programming</h3>
+      <p>Competitive algorithms &amp; data structures. Solve a graded set of problems against the clock.</p>
+      <span class="meta">Teams of 2</span>
+    </article>
+
+    <article class="card reveal">
+      <div class="ico" aria-hidden="true">⚙️</div>
+      <h3>Re-Engineering</h3>
+      <p>Reverse-engineer an existing product and pitch a redesign that improves cost, sustainability, or UX.</p>
+      <span class="meta">Teams of 3</span>
+    </article>
+
+    <article class="card reveal">
+      <div class="ico" aria-hidden="true">🧬</div>
+      <h3>Bio-Engineering</h3>
+      <p>Design a biomedical or biotech intervention. Judged on impact, feasibility, and ethics.</p>
+      <span class="meta">Teams of 3</span>
+    </article>
+  </div>
+</section>
+
+<!-- ---------- TIMELINE ---------- -->
+<section class="block" id="timeline">
+  <h2 class="reveal">Key Dates</h2>
+  <p class="sub reveal">Lock these into your calendar.</p>
+
+  <div class="timeline">
+    <div class="t-item reveal">
+      <div class="when">September 15, 2026</div>
+      <h4>Registration Opens</h4>
+      <p>Form your team and grab your spot. Early-bird pricing all month.</p>
+    </div>
+    <div class="t-item reveal">
+      <div class="when">October 20, 2026</div>
+      <h4>Registration Closes</h4>
+      <p>Last call. Final team rosters and category selections are locked in.</p>
+    </div>
+    <div class="t-item reveal">
+      <div class="when">November 7, 2026</div>
+      <h4>Opening Ceremony</h4>
+      <p>Kick-off keynote at E7 + sponsor mixer. Prompts go live at 18:00 sharp.</p>
+    </div>
+    <div class="t-item reveal">
+      <div class="when">November 8, 2026</div>
+      <h4>Finals &amp; Awards</h4>
+      <p>Live presentations, judging, and the closing gala with $20,000+ in prizes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- SPONSORS / TEAM placeholders ---------- -->
+<section class="block" id="sponsors">
+  <h2 class="reveal">Sponsors</h2>
+  <p class="sub reveal">Backed by the companies hiring the engineers of tomorrow. Sponsor packages open — get in touch via the footer.</p>
+</section>
+
+<section class="block" id="team">
+  <h2 class="reveal">Team</h2>
+  <p class="sub reveal">Built by a passionate team of UWaterloo engineering students. Meet the crew at the opening ceremony.</p>
+</section>
+
+<!-- ---------- FAQ ---------- -->
+<section class="block" id="faq">
+  <h2 class="reveal">Frequently Asked Questions</h2>
+  <p class="sub reveal">Still curious? Email us anytime.</p>
+
+  <div class="faq">
+    <div class="faq-item reveal" aria-expanded="false">
+      <button class="faq-q" aria-controls="a1">
+        <span>Who can compete in WEC Fall 2026?</span>
+        <span class="chev" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="faq-a" id="a1">Any undergraduate engineering student at the University of Waterloo is eligible. Some categories have year-level restrictions — see each category for details.</div>
+    </div>
+
+    <div class="faq-item reveal" aria-expanded="false">
+      <button class="faq-q" aria-controls="a2">
+        <span>Is there a registration fee?</span>
+        <span class="chev" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="faq-a" id="a2">Yes — a small per-person fee covers meals, swag, and venue costs for the weekend. Early-bird pricing applies until October 1.</div>
+    </div>
+
+    <div class="faq-item reveal" aria-expanded="false">
+      <button class="faq-q" aria-controls="a3">
+        <span>Do I need a team to register?</span>
+        <span class="chev" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="faq-a" id="a3">Nope! Solo registrants will be matched into teams via our team-matching form. You can also use our Discord to find teammates beforehand.</div>
+    </div>
+
+    <div class="faq-item reveal" aria-expanded="false">
+      <button class="faq-q" aria-controls="a4">
+        <span>Can I compete in more than one category?</span>
+        <span class="chev" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="faq-a" id="a4">Schedules overlap, so each student may compete in only one category per term. Choose wisely.</div>
+    </div>
+
+    <div class="faq-item reveal" aria-expanded="false">
+      <button class="faq-q" aria-controls="a5">
+        <span>How do I become a sponsor?</span>
+        <span class="chev" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="faq-a" id="a5">We'd love to chat. Email us at <a href="mailto:wec.a@engsoc.uwaterloo.ca" style="color:var(--gold);text-decoration:underline">wec.a@engsoc.uwaterloo.ca</a> and we'll send a sponsor package over.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- FOOTER ---------- -->
+<footer id="register">
+  <div class="row">
+    <a class="mail" href="mailto:wec.a@engsoc.uwaterloo.ca">wec.a@engsoc.uwaterloo.ca</a>
+  </div>
+  <p>Waterloo Engineering Competition · Fall 2026</p>
+  <p style="font-size:14px;opacity:.75">Made with caffeine in the SLC. Build. Compete. Innovate.</p>
+</footer>
+
+<script>
+/* ---------- Smooth scroll for nav links (works even without scroll-behavior) ---------- */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id.length < 2) return;
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // close the mobile menu if open
+    document.getElementById('primary-menu')?.classList.remove('open');
+    document.querySelector('.nav-toggle')?.setAttribute('aria-expanded','false');
+  });
+});
+
+/* ---------- Mobile nav toggle ---------- */
+const toggle = document.querySelector('.nav-toggle');
+const menu = document.getElementById('primary-menu');
+toggle?.addEventListener('click', () => {
+  const open = menu.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', String(open));
+});
+
+/* ---------- FAQ accordion ---------- */
+document.querySelectorAll('.faq-item').forEach(item => {
+  const btn = item.querySelector('.faq-q');
+  const ans = item.querySelector('.faq-a');
+  btn.addEventListener('click', () => {
+    const isOpen = item.getAttribute('aria-expanded') === 'true';
+    // close any open siblings for a cleaner UX
+    document.querySelectorAll('.faq-item[aria-expanded="true"]').forEach(other => {
+      if (other !== item) {
+        other.setAttribute('aria-expanded','false');
+        const a = other.querySelector('.faq-a');
+        a.style.maxHeight = '0px';
+      }
+    });
+    item.setAttribute('aria-expanded', String(!isOpen));
+    ans.style.maxHeight = isOpen ? '0px' : (ans.scrollHeight + 'px');
+  });
+});
+
+/* ---------- Reveal-on-scroll via IntersectionObserver ---------- */
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!reduced && 'IntersectionObserver' in window){
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting){
+        en.target.classList.add('is-visible');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+} else {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+}
+
+/* ---------- Live countdown to opening ceremony (Nov 7, 2026 18:00 ET) ---------- */
+(function(){
+  const el = document.getElementById('countdown');
+  if (!el) return;
+  // ET (UTC-5 in November) → 23:00 UTC
+  const target = new Date('2026-11-07T23:00:00Z').getTime();
+  function tick(){
+    const now = Date.now();
+    const ms = target - now;
+    if (ms <= 0){ el.textContent = "It's go time. See you at E7."; return; }
+    const d = Math.floor(ms / 86400000);
+    const h = Math.floor(ms / 3600000) % 24;
+    const m = Math.floor(ms / 60000) % 60;
+    const s = Math.floor(ms / 1000) % 60;
+    el.textContent = `${d}d · ${h}h · ${m}m · ${s}s until kickoff`;
+  }
+  tick();
+  if (!reduced) setInterval(tick, 1000);
+})();
+</script>
+
+</body>
+</html>
